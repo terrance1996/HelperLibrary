@@ -46,4 +46,11 @@ namespace HelperLibrary
             return d[n, m];
         }
     }
+
+    public static  class Test
+    {
+      public static  string  JobNo = "doc_no";
+        public const string temp = "value";
+
+    }
 }

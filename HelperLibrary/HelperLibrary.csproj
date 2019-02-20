@@ -34,6 +34,9 @@
     <Reference Include="EPPlus, Version=4.5.3.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.4.5.3.1\lib\net40\EPPlus.dll</HintPath>
     </Reference>
+    <Reference Include="fastJSON, Version=2.2.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
+      <HintPath>..\packages\fastJSON.2.2.0.1\lib\net40\fastJSON.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
@@ -51,6 +54,7 @@
   <ItemGroup>
     <Compile Include="ExcelRW.cs" />
     <Compile Include="FuzzyMatching.cs" />
+    <Compile Include="Post.cs" />
     <Compile Include="TextFileRW.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

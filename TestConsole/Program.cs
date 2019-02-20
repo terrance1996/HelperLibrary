@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HelperLibrary;
 
 namespace TestConsole
 {
@@ -10,6 +11,11 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
+           Post.locResult locResult = Post.locResult.checkLocStPc("WILSON", "WA","6107");
+            
+            Console.WriteLine(Test.temp);
+
+            Console.ReadLine();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-           Post.locResult locResult = Post.locResult.checkLocStPc("WILSON", "WA","6107");
+         //  Post.locResult locResult = Post.locResult.checkLocStPc("WILSON", "WA","6107");
             
             Console.WriteLine(Test.temp);
 

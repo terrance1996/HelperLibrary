@@ -152,7 +152,33 @@ namespace HelperLibrary
             return table;
         }
 
-       
+        public static List<string> getColumns(string path, string delimiter)
+        {
+            List<string> colList = new List<string>();
+            using (TextFieldParser txtParser = new TextFieldParser(path))
+            {
+                txtParser.SetDelimiters(delimiter);
+
+                while (!txtParser.EndOfData)
+                {
+                    string[] fields = txtParser.ReadFields();
+
+                    long line = txtParser.LineNumber;
+
+                    if (line == 2)
+                    {
+                        foreach (string field in fields)
+                        {
+                            colList.Add(field);
+                        }
+                        return colList;
+                    }
+
+                }
+            }
+            return null;
+        }
+
 
     }
 }

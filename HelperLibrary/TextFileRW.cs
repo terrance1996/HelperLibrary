@@ -106,7 +106,7 @@ namespace HelperLibrary
             try
             {
                 int count = 0;
-                using (TextFieldParser txtParser = new TextFieldParser(fileName))
+                using (TextFieldParser txtParser = new TextFieldParser(fileName, Encoding.Default))
                 {
                     txtParser.SetDelimiters(delimiter);
 
@@ -155,7 +155,7 @@ namespace HelperLibrary
         public static List<string> getColumns(string path, string delimiter)
         {
             List<string> colList = new List<string>();
-            using (TextFieldParser txtParser = new TextFieldParser(path))
+            using (TextFieldParser txtParser = new TextFieldParser(path, Encoding.Default))
             {
                 txtParser.SetDelimiters(delimiter);
 

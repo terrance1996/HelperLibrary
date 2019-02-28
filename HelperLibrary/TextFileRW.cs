@@ -38,12 +38,21 @@ namespace HelperLibrary
             return dataTable;
         }
 
-        public static string setOutputFilename(string sourceFilename, string suffix)
+        public static string setOutputFilename(string sourceFilename, string suffix, string extension, bool addTimeStamp = false)
         {
-            return $"{sourceFilename.Substring(0, sourceFilename.Length - 4)} {suffix}{DateTime.Now.ToLongTimeString().Replace(":", "").Replace(" ", "")} .txt";
+
+            if (addTimeStamp)
+            {
+                return $"{sourceFilename.Replace(extension, "")} {suffix}{DateTime.Now.ToLongTimeString().Replace(":", "").Replace(" ", "")}{extension}";
+            }
+            else
+            {
+                return $"{sourceFilename.Replace(extension, "")} {suffix}{extension}";
+            }
         }
 
-        public static void writeTableToTxtFile(DataTable dtResult, string pathResult, string delimiter, bool hasHeader = true)
+
+        public static void writeTableToTxtFile(DataTable dtResult, string pathResult, string delimiter, bool hasHeader = true, IProgress<int> progress=null)
         {
             try
             {
@@ -89,6 +98,8 @@ namespace HelperLibrary
                     {
                         writer.WriteLine(lineBuilder.ToString());
                     }
+                    progress.Report(i);
+
                 }
 
                 fsWrite.Close();

@@ -98,7 +98,10 @@ namespace HelperLibrary
                     {
                         writer.WriteLine(lineBuilder.ToString());
                     }
-                    progress.Report(i);
+                    if (progress != null)
+                    {
+                        progress.Report(i);
+                    }
 
                 }
 
@@ -111,7 +114,65 @@ namespace HelperLibrary
 
         }
 
-        public static DataTable readTextFileToTable(string fileName, string delimiter)
+        public static DataTable readTextFileToTable(string fileName, string delimiter, IProgress<int> progress =null)
+        {
+            DataTable table = new DataTable();
+            try
+            {
+                int count = 0;
+                using (TextFieldParser txtParser = new TextFieldParser(fileName, Encoding.Default))
+                {
+                    txtParser.SetDelimiters(delimiter);
+
+                    while (!txtParser.EndOfData)
+                    {
+                        string[] fields = txtParser.ReadFields();
+
+                        int l = fields.GetLength(0);
+                        long line = txtParser.LineNumber;
+
+                        if (line == 2)
+                        {
+                            int colIndex = 0;
+
+                            foreach (string field in fields)
+                            {
+
+                                if (table.Columns.Contains(field))
+                                {
+                                    colIndex++;
+                                    table.Columns.Add($"{field}_{colIndex}"); // For files with repeating column names.
+                                }
+                                else
+                                {
+                                    table.Columns.Add(field);
+                                }
+
+                            }
+                        }
+                        else
+                        { table.Rows.Add(fields); }
+                        count++;
+
+                        if (progress != null)
+                        {
+                            progress.Report(count);
+                        }
+                  
+
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return table;
+        }
+
+        public static async Task<DataTable> readTextFileToTableAsync(string fileName, string delimiter, IProgress<int> progress)
         {
             DataTable table = new DataTable();
             try
@@ -150,6 +211,7 @@ namespace HelperLibrary
                         else
                         { table.Rows.Add(fields); }
                         count++;
+                        progress.Report(count);
 
                     }
 

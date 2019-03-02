@@ -7,7 +7,7 @@ using System.Net;
 using System.IO;
 using fastJSON;
 
-namespace CL_eParcel
+namespace HelperLibrary
 {
     public class Post
     {
@@ -26,6 +26,78 @@ namespace CL_eParcel
             public string CapitalPostcode { get; set; }
         }
 
+        public static bool ValidatePostcode(string state, string postcode)
+        {
+            switch (state)
+            {
+                case "NSW":
+                    if (int.Parse(postcode) >= 200 && int.Parse(postcode) <= 299)
+                    { return true; }
+                    else if (int.Parse(postcode) >= 1000 && int.Parse(postcode) <= 2999)
+                    { return true; }
+                    else
+                    { return false; }
+                case "ACT":
+                    if (int.Parse(postcode) >= 200 && int.Parse(postcode) <= 299)
+                    { return true; }
+                    else if (int.Parse(postcode) >= 1000 && int.Parse(postcode) <= 2999)
+                    { return true; }
+                    else
+                    { return false; }
+
+                case "NT":
+                    if (int.Parse(postcode) >= 800 && int.Parse(postcode) <= 999)
+                    { return true; }
+                    else
+                    { return false; }
+
+                case "QLD":
+                    if (int.Parse(postcode) >= 4000 && int.Parse(postcode) <= 4899)
+                    { return true; }
+                    else if (int.Parse(postcode) >= 9000 && int.Parse(postcode) <= 9299)
+                    { return true; }
+                    else if (int.Parse(postcode) >= 9400 && int.Parse(postcode) <= 9599)
+                    { return true; }
+                    else if (int.Parse(postcode) >= 9700 && int.Parse(postcode) <= 9999)
+                    { return true; }
+                    else
+                    { return false; }
+
+                case "SA":
+                    if (int.Parse(postcode) >= 5000 && int.Parse(postcode) <= 5749)
+                    { return true; }
+                    else if (int.Parse(postcode) >= 5800 && int.Parse(postcode) <= 5999)
+                    { return true; }
+                    else
+                    { return false; }
+
+                case "TAS":
+                    if (int.Parse(postcode) >= 7000 && int.Parse(postcode) <= 7999)
+                    { return true; }
+                    else
+                    { return false; }
+
+                case "VIC":
+                    if (int.Parse(postcode) >= 3000 && int.Parse(postcode) <= 3999)
+                    { return true; }
+                    else if (int.Parse(postcode) >= 8000 && int.Parse(postcode) <= 8999)
+                    { return true; }
+                    else
+                    { return false; }
+
+                case "WA":
+                    if (int.Parse(postcode) >= 6000 && int.Parse(postcode) <= 6999)
+                    { return true; }
+                    else
+                    { return false; }
+
+                default:
+                    return false;
+            }
+
+
+
+        }
 
         static List<State> statesList = new List<State>
                                                          {
@@ -40,16 +112,24 @@ namespace CL_eParcel
                                                                                                                                                                      };
 
 
-        public static string fixState(string stateVal)
-        {        
+        public static bool fixState(string stateVal, out string fixedState)
+        {
             foreach (State s in statesList)
             {
                 if (stateVal.Replace(".", "").ToUpper() == s.Name || stateVal.Replace(".", "").ToUpper() == s.Code)
                 {
-                    return s.Code;              
+                    fixedState = s.Code;
+                    return true;
                 }
+                else if (FuzzyMatching.LevenshteinDistance(stateVal.Replace(".", "").ToUpper(), s.Name) < 2)
+                {
+                    fixedState = s.Code;
+                    return true;
+                }
+
             }
-            return "";
+            fixedState = stateVal;
+            return false;
         }
 
         public static double getPostage(string fromPC, string toPC, string length, string width, string height, string weight, string serviceCode = "AUS_PARCEL_REGULAR")

@@ -36,14 +36,62 @@ namespace HelperLibrary
                 }
                 var ws = pck.Workbook.Worksheets[sheetNumber];
                 DataTable tbl = new DataTable();
+                int dupColCount = 0;
+                var range = ws.Cells[headerRow, 1, headerRow, ws.Dimension.End.Column];
                 foreach (var firstRowCell in ws.Cells[headerRow, 1, headerRow, ws.Dimension.End.Column])
                 {
-                    tbl.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                    if(tbl.Columns.Contains(firstRowCell.Text))`    
+                    {
+                        dupColCount++;
+                        tbl.Columns.Add(hasHeader ? $"{firstRowCell.Text}_{dupColCount}"  : string.Format("Column {0}", firstRowCell.Start.Column));
+                    }
+                    else
+                    {
+                        tbl.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                    }
                 }
                 var startRow = hasHeader ? headerRow + 1 : 1;
                 for (int rowNum = startRow; rowNum <= ws.Dimension.End.Row; rowNum++)
                 {
                     var wsRow = ws.Cells[rowNum, 1, rowNum, ws.Dimension.End.Column];
+                    DataRow row = tbl.Rows.Add();
+                    foreach (var cell in wsRow)
+                    {
+                        row[cell.Start.Column - 1] = cell.Text;
+                    }
+                }
+                return tbl;
+            }
+        }
+
+        public static DataTable ReadXlsxColumns(string path, int sheetNumber, int columnCount, int headerRow = 1, bool hasHeader = true)
+        {
+            using (var pck = new ExcelPackage())
+            {
+                using (var stream = File.OpenRead(path))
+                {
+                    pck.Load(stream);
+                }
+                var ws = pck.Workbook.Worksheets[sheetNumber];
+                DataTable tbl = new DataTable();
+                int dupColCount = 0;
+                var range = ws.Cells[headerRow, 1, headerRow, columnCount];
+                foreach (var firstRowCell in ws.Cells[headerRow, 1, headerRow, columnCount])
+                {
+                    if (tbl.Columns.Contains(firstRowCell.Text))
+                    {
+                        dupColCount++;
+                        tbl.Columns.Add(hasHeader ? $"{firstRowCell.Text}_{dupColCount}" : string.Format("Column {0}", firstRowCell.Start.Column));
+                    }
+                    else
+                    {
+                        tbl.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                    }
+                }
+                var startRow = hasHeader ? headerRow + 1 : 1;
+                for (int rowNum = startRow; rowNum <= ws.Dimension.End.Row; rowNum++)
+                {
+                    var wsRow = ws.Cells[rowNum, 1, rowNum, columnCount];
                     DataRow row = tbl.Rows.Add();
                     foreach (var cell in wsRow)
                     {

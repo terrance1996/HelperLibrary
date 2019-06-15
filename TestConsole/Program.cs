@@ -18,7 +18,7 @@ namespace TestConsole
             progress.ProgressChanged += Progress_ProgressChanged;
 
             TextFileRW.readTextFileToTable(@"C:\Users\Gayan\Documents\MSOL\test data\ADHOC JOB\Test sorted file.txt", "\t");
-
+            ExcelRW.ReadXLSX(@"C:\Shared\camerich description update\camerich updated.xlsx",1,3);
             Console.ReadLine();
         }
 

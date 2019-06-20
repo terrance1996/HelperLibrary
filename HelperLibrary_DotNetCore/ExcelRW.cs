@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Data;
 using OfficeOpenXml;
 using System.IO;
+using System.Data;
 
-namespace HelperLibrary
+namespace HelperLibrary_DotNetSTD
 {
     public class ExcelRW
     {
@@ -19,14 +17,11 @@ namespace HelperLibrary
             {
                 var ws = xlPackage.Workbook.Worksheets.Add(sheetName);
                 ws.Cells.LoadFromDataTable(table, true);
-
-                ws.Cells["A:P"].Style.Numberformat.Format = null;
-                ws.Cells["K:P"].Style.Numberformat.Format = "$###,##0.00";
                 xlPackage.Save();
             }
         }
 
-        public static DataTable ReadXLSX(string path, int sheetNumber, int headerRow=1, bool hasHeader = true)
+        public static DataTable ReadXLSX(string path, int sheetNumber, int headerRow = 1, bool hasHeader = true)
         {
             using (var pck = new ExcelPackage())
             {
@@ -40,10 +35,10 @@ namespace HelperLibrary
                 var range = ws.Cells[headerRow, 1, headerRow, ws.Dimension.End.Column];
                 foreach (var firstRowCell in ws.Cells[headerRow, 1, headerRow, ws.Dimension.End.Column])
                 {
-                    if(tbl.Columns.Contains(firstRowCell.Text)) 
+                    if (tbl.Columns.Contains(firstRowCell.Text))
                     {
                         dupColCount++;
-                        tbl.Columns.Add(hasHeader ? $"{firstRowCell.Text}_{dupColCount}"  : string.Format("Column {0}", firstRowCell.Start.Column));
+                        tbl.Columns.Add(hasHeader ? $"{firstRowCell.Text}_{dupColCount}" : string.Format("Column {0}", firstRowCell.Start.Column));
                     }
                     else
                     {
@@ -102,5 +97,30 @@ namespace HelperLibrary
             }
         }
 
+        public static void CreatExcelFileForREX(string fileName, DataTable table, DataTable duplicateCodes = null)
+        {
+
+            var newFile = new FileInfo(fileName);
+            using (ExcelPackage xlPackage = new ExcelPackage(newFile))
+            {
+                var ws = xlPackage.Workbook.Worksheets.Add("Product Master");
+
+
+                ws.Cells.LoadFromDataTable(table, true);
+                if (duplicateCodes != null)
+                {
+                    var wsDuplicates = xlPackage.Workbook.Worksheets.Add("Duplicate Codes");
+                    wsDuplicates.Cells.LoadFromDataTable(duplicateCodes, true);
+                }
+
+
+                ws.InsertRow(1, 9);
+                ws.Cells["A:P"].Style.Numberformat.Format = null;
+                ws.Cells["K:P"].Style.Numberformat.Format = "$###,##0.00";
+                xlPackage.Save();
+            }
+        }
+
     }
+
 }

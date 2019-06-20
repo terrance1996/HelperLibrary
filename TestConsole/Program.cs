@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 using HelperLibrary;
 
 namespace TestConsole
@@ -13,12 +14,13 @@ namespace TestConsole
         {
          //  Post.locResult locResult = Post.locResult.checkLocStPc("WILSON", "WA","6107");
             
-            Console.WriteLine(Test.temp);
+           // Console.WriteLine(Test.temp);
             Progress<int> progress = new Progress<int>();
             progress.ProgressChanged += Progress_ProgressChanged;
 
             TextFileRW.readTextFileToTable(@"C:\Users\Gayan\Documents\MSOL\test data\ADHOC JOB\Test sorted file.txt", "\t");
-            ExcelRW.ReadXLSX(@"C:\Shared\camerich description update\camerich updated.xlsx",1,3);
+          DataTable dt =  ExcelRW.ReadXLSX(@"C:\Shared\camerich description update\camerich updated.xlsx",1,3);
+            Console.WriteLine(dt.Rows.Count.ToString());
             Console.ReadLine();
         }
 

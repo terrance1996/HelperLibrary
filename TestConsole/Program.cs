@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using HelperLibrary.NetCore;
 using System.Data;
-using HelperLibrary;
+
 
 namespace TestConsole
 {
@@ -12,21 +9,18 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-         //  Post.locResult locResult = Post.locResult.checkLocStPc("WILSON", "WA","6107");
-            
-           // Console.WriteLine(Test.temp);
-            Progress<int> progress = new Progress<int>();
-            progress.ProgressChanged += Progress_ProgressChanged;
+            string fileName = @"C:\Users\Gayan\Documents\MSOL\DEBTOR_123456781234_ALL LETTER TYPES.txt";
 
-            TextFileRW.readTextFileToTable(@"C:\Users\Gayan\Documents\MSOL\test data\ADHOC JOB\Test sorted file.txt", "\t");
-          DataTable dt =  ExcelRW.ReadXLSX(@"C:\Shared\camerich description update\camerich updated.xlsx",1,3);
-            Console.WriteLine(dt.Rows.Count.ToString());
-            Console.ReadLine();
-        }
-
-        private static void Progress_ProgressChanged(object sender, int e)
-        {
-            Console.Write($"{e}\r");
+            DataTable dt = TextFileRW.readTextFileToTable(fileName,"\t");
+            foreach(DataRow row  in dt.Rows)
+            {
+                foreach (DataColumn col in dt.Columns)
+                {
+                    Console.Write($"{row[col].ToString()} ");
+                }
+                Console.Write("\n"); 
+            }
+            Console.Read();
         }
     }
 }
